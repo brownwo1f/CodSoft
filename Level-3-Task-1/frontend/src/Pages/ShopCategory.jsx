@@ -4,7 +4,6 @@ import Item from "../Components/Item";
 
 const ShopCategory = (props) => {
   const { all_product } = useContext(HomeContext);
-  console.log(props.category, all_product[15].category);
   return (
     <>
       <div>

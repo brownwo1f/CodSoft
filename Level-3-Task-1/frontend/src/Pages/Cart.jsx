@@ -21,10 +21,7 @@ const Cart = () => {
           {all_product.map((item, i) => {
             if (cartItem[item.id] > 0) {
               return (
-                <div
-                  key={i}
-                  className="  grid h-32 grid-cols-8 rounded-lg border"
-                >
+                <div key={i} className="  grid grid-cols-8 rounded-lg border">
                   <div className="p-4">
                     <img
                       className="h-30 w-20 rounded-lg"

@@ -59,11 +59,24 @@ const Navbar = () => {
         </li>
       </ul>
       <div className="flex gap-x-8 text-xl font-semibold">
-        <Link to="/login">
-          <button className="rounded-full border-2 border-blue-500 px-4 pb-1 text-blue-500 hover:bg-blue-500 hover:text-white">
-            Login
+        {localStorage.getItem("auth-token") ? (
+          <button
+            onClick={() => {
+              localStorage.clear();
+              window.location.replace("/");
+            }}
+            className="rounded-full border-2 border-blue-500 px-4 pb-1 text-blue-500 hover:bg-blue-500 hover:text-white"
+          >
+            Logout
           </button>
-        </Link>
+        ) : (
+          <Link to="/login">
+            <button className="rounded-full border-2 border-blue-500 px-4 pb-1 text-blue-500 hover:bg-blue-500 hover:text-white">
+              Login
+            </button>
+          </Link>
+        )}
+
         <Link to="/cart">
           <div className="flex">
             <img className="h-8 w-8" src={cart}></img>

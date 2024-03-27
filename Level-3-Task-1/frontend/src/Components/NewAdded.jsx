@@ -1,8 +1,14 @@
-import React from "react";
-import new_collections from "../assets/new_collections";
+import React, { useEffect, useState } from "react";
 import Item from "./Item";
 
 const NewAdded = () => {
+  const [new_collections, setNew_Collection] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/newcollection")
+      .then((res) => res.json())
+      .then((data) => setNew_Collection(data));
+  }, []);
   return (
     <div>
       <p className="px-20 pt-10 text-3xl font-bold">Just Arrived</p>

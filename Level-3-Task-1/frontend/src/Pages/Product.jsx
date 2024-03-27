@@ -18,10 +18,10 @@ const Product = () => {
         Home <img src={arrow} alt="" /> {product.category}{" "}
         <img src={arrow} alt="" /> {product.name}
       </div>
-      <div className="flex h-screen">
+      <div className="mb-10 flex">
         <div className="left w-1/3 pl-40">
           <div className="my-10 w-full overflow-hidden rounded-lg">
-            <img className="w-full object-cover" src={product.image} alt="" />
+            <img className="w-full object-contain" src={product.image} alt="" />
           </div>
           <div className="flex w-full gap-x-3">
             <div>
