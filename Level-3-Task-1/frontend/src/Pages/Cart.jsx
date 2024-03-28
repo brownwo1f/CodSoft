@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { HomeContext } from "../Context/HomeContext";
 import { FaMinusCircle } from "react-icons/fa";
+import logo from "../assets/logo.png";
 import { FaPlusCircle } from "react-icons/fa";
 
 const Cart = () => {
@@ -13,6 +14,48 @@ const Cart = () => {
   } = useContext(HomeContext);
 
   const { mrpAmt, totalAmt, discount } = getTotalCartAmount();
+
+  const [data, setData] = useState({});
+
+  const handleCheckout = async (Amt) => {
+    const token = localStorage.getItem("auth-token");
+    if (token) {
+      await fetch("http://localhost:5000/payment", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ totalAmt: Amt }),
+      })
+        .then((res) => res.json())
+        .then((data) => setData(data));
+    }
+    var options = {
+      key: "rzp_test_4dpeg6zwlKDqZU", // Enter the Key ID generated from the Dashboard
+      amount: data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: data.currency,
+      name: "CodCart Inc.",
+      description: "Test Transaction",
+      image: logo,
+      order_id: data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      callback_url: "http://localhost:5000/payment-verification",
+      prefill: {
+        name: "Deepak Chauhan",
+        email: "email@gmail.com",
+        contact: "9000090000",
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+    var rzp1 = new window.Razorpay(options);
+    rzp1.open();
+  };
   return (
     <>
       <p className="p-10 text-4xl font-bold">Your CodCart</p>
@@ -76,7 +119,12 @@ const Cart = () => {
             <p>Total</p>
             <p>${totalAmt}</p>
           </span>
-          <button className="my-5 w-full rounded-lg bg-blue-500 py-2 font-semibold text-white">
+          <button
+            onClick={() => {
+              handleCheckout(totalAmt);
+            }}
+            className="my-5 w-full rounded-lg bg-blue-500 px-5 py-2 font-semibold text-white"
+          >
             Proceed to Checkout
           </button>
         </div>

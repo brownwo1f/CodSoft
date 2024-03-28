@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const crypto = require("crypto");
+const RazorPay = require("razorpay");
 
 const app = express();
 app.use(express.json());
@@ -270,6 +272,46 @@ app.post("/getcart", fetchUser, async (req, res) => {
   let userData = await User.findOne({ _id: req.user.id });
   res.json(userData.cartData);
 });
+//!
+
+//! razoypay stuff
+const razorpay = new RazorPay({
+  key_id: process.env.KEY_ID,
+  key_secret: process.env.KEY_SECRET,
+});
+
+app.post("/payment", async (req, res) => {
+  const { totalAmt } = req.body;
+  const order = await razorpay.orders.create({
+    amount: Number(totalAmt) * 100,
+    currency: "INR",
+  });
+  res.json(order);
+});
+
+app.post("/payment-verification", async (req, res) => {
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+    req.body;
+
+  const body_data = razorpay_order_id + "|" + razorpay_payment_id;
+
+  const expect = crypto
+    .createHmac("sha256", process.env.KEY_SECRET)
+    .update(body_data)
+    .digest("hex");
+
+  const isValid = expect === razorpay_signature;
+  if (isValid) {
+    res.redirect(
+      `http://localhost:5173/cart?payment_id=${razorpay_payment_id}`
+    );
+    return;
+  } else {
+    res.redirect("http://localhost:5173/cart");
+    return;
+  }
+});
+
 //!
 app.get("/", (req, res) => {
   res.status(200).send({ message: "Welcom to server" });
