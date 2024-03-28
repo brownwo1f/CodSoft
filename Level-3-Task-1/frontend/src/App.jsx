@@ -10,6 +10,7 @@ import Footer from "./Components/Footer";
 import menBanner from "/src/assets/banner_mens.png";
 import womenBanner from "/src/assets/banner_women.png";
 import kidsBanner from "/src/assets/banner_kids.png";
+import Success from "./Pages/Success";
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
             <Route path=":productId" element={<Product />}></Route>
           </Route>
           <Route path="/login" element={<LoginSignup />}></Route>
+          <Route path="/success" element={<Success />}></Route>
         </Routes>
         <Footer />
       </BrowserRouter>

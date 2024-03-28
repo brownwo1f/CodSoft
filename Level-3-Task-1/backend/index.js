@@ -284,7 +284,7 @@ app.post("/payment", async (req, res) => {
   const { totalAmt } = req.body;
   const order = await razorpay.orders.create({
     amount: Number(totalAmt) * 100,
-    currency: "INR",
+    currency: "USD",
   });
   res.json(order);
 });
@@ -302,12 +302,10 @@ app.post("/payment-verification", async (req, res) => {
 
   const isValid = expect === razorpay_signature;
   if (isValid) {
-    res.redirect(
-      `http://localhost:5173/cart?payment_id=${razorpay_payment_id}`
-    );
+    res.redirect("http://localhost:5173/success");
     return;
   } else {
-    res.redirect("http://localhost:5173/cart");
+    res.redirect("http://localhost:5173/success");
     return;
   }
 });
